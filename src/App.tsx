@@ -1,24 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { BaseButton } from "./components/Button/BaseButton";
+import { State } from "./pages/State";
+import { EventCall } from "./pages/EventCall";
+import { Paper } from "@mui/material";
 
 function App() {
+  const [job, setJob] = useState<string>("");
+  const [isStatePage, setIsStatePage] = useState<boolean>(false);
+  const [isEventPage, setIsEventPage] = useState<boolean>(false);
+
+  const openStatePage = () => {
+    setIsEventPage(false);
+    setIsStatePage(!isStatePage);
+  };
+
+  const openEventPage = () => {
+    setIsStatePage(false);
+    setIsEventPage(!isEventPage);
+  };
+
+  const resetPage = () => {
+    setIsStatePage(false);
+    setIsEventPage(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <BaseButton label="state" onClick={() => openStatePage()} />
+      <BaseButton label="EventCall" onClick={() => openEventPage()} />
+      <BaseButton label="reset" onClick={() => resetPage()} />
+      {(isStatePage || isEventPage) && (
+        <Paper
+          variant="outlined"
+          sx={{
+            textAlign: "center",
+            marginTop: 8,
+            padding: 8,
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          {isStatePage ? <h2>STATE</h2> : <h2>EVENT</h2>}
+          {isStatePage && <State job={job} />}
+          {isEventPage && <EventCall setJob={setJob} />}
+        </Paper>
+      )}
     </div>
   );
 }
